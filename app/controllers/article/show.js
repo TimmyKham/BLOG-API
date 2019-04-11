@@ -1,9 +1,11 @@
 // Core
-const mock = require('../../models/get-article.js')
+const mock = require('../../models/article.js')
 
 module.exports = class Show {
-  constructor (app) {
+  constructor (app, config, connect) {
     this.app = app
+    this.config = config
+    this.ArticleModel = connect.model('Article', mock)
 
     this.run()
   }
@@ -20,8 +22,15 @@ module.exports = class Show {
             message: 'Not Found'
           })
         }
-
-        res.status(200).json(mock[req.params.id] || {})
+      this.ArticleModel.find(req.params.id,(err,results) => {
+        if(err){
+          res.status(400).json({
+            'code': 400,
+            'message': 'Bad request'
+        })
+      }
+      res.status(200).json(results) || {};
+    });
       } catch (e) {
         console.error(`[ERROR] article/show/:id -> ${e}`)
         res.status(400).json({

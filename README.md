@@ -65,6 +65,28 @@ Show an article.
   }
 ```
 
+### [PUT] Update article
+
+* HTTP request : PUT → article/update/{id}
+
+#### Parameters :
+```javascript
+{
+  'titre': String, // Optional
+  'description': String // Optional
+}
+```
+
+#### Response :
+```javascript
+  {
+    _id: Object_ID,
+    titre: String,
+    date_article: Date,
+    description: String
+  }
+```
+
 
 ### Requirements
 * node 10

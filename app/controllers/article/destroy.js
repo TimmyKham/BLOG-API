@@ -1,10 +1,11 @@
 // Core
-const mock = require('../../models/get-article.js')
+const mock = require('../../models/article.js')
 
 module.exports = class Destroy {
-  constructor (app) {
+  constructor (app, config, connect) {
     this.app = app
-
+    this.config = config
+    this.ArticleModel = connect.model('Article', mock)
     this.run()
   }
 
@@ -20,10 +21,15 @@ module.exports = class Destroy {
             message: 'Not Found'
           })
         }
-
-        delete mock[req.params.id]
-
-        res.status(200).json(mock || {})
+        this.ArticleModel.findOneAndDelete(req.params.id,(err,results) => {
+          if(err){
+            res.status(500).json({
+            code: 500,
+            message: 'Internal Server Error'
+          })
+        }
+        res.status(200).json(results);
+      });
       } catch (e) {
         console.error(`[ERROR] article/destroy/:id -> ${e}`)
         res.status(400).json({

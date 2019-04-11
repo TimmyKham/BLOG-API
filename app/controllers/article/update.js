@@ -1,13 +1,14 @@
 // Core
-const mock = require('../../models/get-article.js')
+const mock = require('../../models/article.js')
 const validator = require('node-validator')
+const check = require('./payload-validator/update.js')
 
-const check = validator.isObject()
-  .withRequired('name', validator.isString())
-
-module.exports = class Update {
-  constructor (app) {
+module.exports = class Destroy {
+  constructor (app, config, connect) {
     this.app = app
+    this.config = config
+    this.check = check
+    this.ArticleModel = connect.model('Article', mock)
 
     this.run()
   }
@@ -24,15 +25,15 @@ module.exports = class Update {
             message: 'Not Found'
           })
         }
-
-        const name = req.body.name
-        const article = mock[req.params.id]
-
-        article.name = name
-
-        res.status(200).json({
-          [req.params.id]: article
-        })
+        this.ArticleModel.findOneAndReplace({_id : req.params.id},{titre: req.body.titre, description: req.body.description},(err,results) => {
+        if(err){
+          res.status(400).json({
+            'code': 400,
+            'message': 'Bad request'
+          })
+        } 
+        res.status(200).json(results);
+        });
       } catch (e) {
         console.error(`[ERROR] article/update -> ${e}`)
         res.status(400).json({

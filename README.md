@@ -50,7 +50,7 @@ Delete an article.
   }
 ```
 
-### [SHOW] Show article by id
+### [GET] Show article by id
 Show an article.
 
 * HTTP request : GET → article/show/{id}

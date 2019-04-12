@@ -23,9 +23,9 @@ module.exports = class Destroy {
         }
         this.ArticleModel.findOneAndDelete(req.params.id,(err,results) => {
           if(err){
-            res.status(500).json({
-            code: 500,
-            message: 'Internal Server Error'
+            res.status(400).json({
+              'code': 400,
+              'message': 'Bad request'
           })
         }
         res.status(200).json(results);

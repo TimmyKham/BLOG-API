@@ -1,14 +1,15 @@
 // Core
-const mock = require('../../models/get-article.js')
+const mock = require('../../models/article.js')
 const validator = require('node-validator')
 
 const check = validator.isObject()
-  .withRequired('ids', validator.isArray())
+  .withRequired('id', validator.isArray())
 
 module.exports = class Search {
-  constructor (app) {
+  constructor (app, config, connect) {
     this.app = app
-
+    this.config = config
+    this.ArticleModel = connect.model('Article', mock)
     this.run()
   }
 
@@ -19,11 +20,11 @@ module.exports = class Search {
     this.app.post('/article/search', validator.express(check), (req, res) => {
       try {
         const result = {}
-        const ids = req.body.ids
+        const id = req.body.id
 
-        for (let i = 0, len = ids.length; i < len; i += 1) {
+        for (let i = 0, len = id.length; i < len; i += 1) {
           Object.assign(result, {
-            [ids[i]]: mock[ids[i]]
+            [id[i]]: mock[id[i]]
           })
         }
 

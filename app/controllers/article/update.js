@@ -1,5 +1,5 @@
 // Core
-const mock = require('../../models/article.js')
+const Schema = require('../../models/article.js')
 const validator = require('node-validator')
 const check = require('./payload-validator/update.js')
 
@@ -8,7 +8,7 @@ module.exports = class Destroy {
     this.app = app
     this.config = config
     this.check = check
-    this.ArticleModel = connect.model('Article', mock)
+    this.ArticleModel = connect.model('Article', Schema)
 
     this.run()
   }

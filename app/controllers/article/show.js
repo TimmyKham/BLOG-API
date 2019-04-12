@@ -1,10 +1,10 @@
-const mock = require('../../models/article.js')
+const Schema = require('../../models/article.js')
 
 module.exports = class Show {
   constructor (app, config, connect) {
     this.app = app
     this.config = config
-    this.ArticleModel = connect.model('Article', mock)
+    this.ArticleModel = connect.model('Article', Schema)
 
     this.run()
   }

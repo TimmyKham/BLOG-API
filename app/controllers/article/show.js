@@ -1,4 +1,3 @@
-// Core
 const mock = require('../../models/article.js')
 
 module.exports = class Show {
@@ -26,7 +25,7 @@ module.exports = class Show {
         if(err){
           res.status(400).json({
             'code': 400,
-            'message': 'Bad request'
+            'message': 'Bad request or ID'
         })
       }
       res.status(200).json(results) || {};

@@ -1,36 +1,35 @@
 // Core
 const mock = require('../../models/article.js')
-const validator = require('node-validator')
-
-const check = validator.isObject()
-  .withRequired('id', validator.isArray())
 
 module.exports = class Search {
   constructor (app, config, connect) {
     this.app = app
     this.config = config
     this.ArticleModel = connect.model('Article', mock)
+
     this.run()
   }
 
-  /**
-   * Middleware
-   */
   middleware () {
-    this.app.post('/article/search', validator.express(check), (req, res) => {
+    this.app.get('/article/search/:id', (req, res) => {
       try {
-        const result = {}
-        const id = req.body.id
-
-        for (let i = 0, len = id.length; i < len; i += 1) {
-          Object.assign(result, {
-            [id[i]]: mock[id[i]]
+        if (!req.params || !req.params.id.length) {
+          res.status(404).json({
+            code: 404,
+            message: 'Not Found'
           })
         }
-
-        res.status(200).json(result)
+      this.ArticleModel.find(req.params.id,(err,results) => {
+        if(err){
+          res.status(400).json({
+            'code': 400,
+            'message': 'Bad request'
+        })
+      }
+      res.status(200).json(results) || {};
+    });
       } catch (e) {
-        console.error(`[ERROR] article/search -> ${e}`)
+        console.error(`[ERROR] article/search/:id -> ${e}`)
         res.status(400).json({
           'code': 400,
           'message': 'Bad request'
